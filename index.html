@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherCompare - Compare Weather Data</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header animate__animated animate__fadeInDown">
+        <div class="header-content">
+            <h1>⛅ WeatherCompare</h1>
+            <p class="subtitle">Compare weather data from two sources</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Search Section -->
+        <section class="search-section animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
+            <div class="search-wrapper">
+                <input 
+                    type="text" 
+                    id="cityInput" 
+                    class="search-input" 
+                    placeholder="Enter city name..."
+                    autocomplete="off"
+                >
+                <button id="searchBtn" class="search-btn">🔍 Search</button>
+            </div>
+        </section>
+
+        <!-- Weather Cards Container -->
+        <section class="cards-container">
+            <!-- OpenWeatherMap Card -->
+            <div class="weather-card" id="card1" style="animation-delay: 0.4s">
+                <div class="card-header">
+                    <h2>OpenWeatherMap</h2>
+                </div>
+                <div class="card-content">
+                    <div id="openweather-content" class="content-placeholder">
+                        <p>Enter a city to get started</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WeatherAPI Card -->
+            <div class="weather-card" id="card2" style="animation-delay: 0.6s">
+                <div class="card-header">
+                    <h2>WeatherAPI</h2>
+                </div>
+                <div class="card-content">
+                    <div id="weatherapi-content" class="content-placeholder">
+                        <p>Enter a city to get started</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <button id="clearHistoryBtn" class="clear-history-btn">Clear History</button>
+        <div class="attribution">
+            <p>Data provided by <a href="https://openweathermap.org/" target="_blank">OpenWeatherMap</a> and <a href="https://www.weatherapi.com/" target="_blank">WeatherAPI</a></p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/dom.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
