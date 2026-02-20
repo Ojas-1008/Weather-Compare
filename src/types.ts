@@ -1,44 +1,47 @@
-// Unified data structure for the UI
-export interface WeatherData {
-    city: string;
-    temperature: number;
-    description: string;
-    humidity: number;
-    windSpeed: number;
-    icon: string;
-    lastUpdated: string;
-}
-
-// Example interface for OpenWeatherMap response
-export interface OpenWeatherResponse {
+// Interface for OpenWeatherMap API response
+export interface OWMApiResponse {
+    name: string; // City name
     main: {
-        temp: number;
-        humidity: number;
+        temp: number; // Temperature in Celsius
+        humidity: number; // Humidity percentage
     };
-    weather: Array<{
-        description: string;
-        icon: string;
+    weather: Array<{ // Array of weather conditions
+        description: string; // Weather description
+        icon: string; // Icon code for weather
     }>;
-    name: string;
-    dt: number;
     wind: {
-        speed: number;
+        speed: number; // Wind speed in m/s
     };
+    dt: number; // Timestamp of data
 }
 
-// Example interface for WeatherAPI response
-export interface WeatherAPIResponse {
+// Interface for WeatherAPI response
+export interface WAApiResponse {
     location: {
-        name: string;
+        name: string; // City name
+        localtime: string; // Local time
     };
     current: {
-        temp_c: number;
-        humidity: number;
-        wind_kph: number;
+        temp_c: number; // Temperature in Celsius
+        humidity: number; // Humidity percentage
+        wind_kph: number; // Wind speed in km/h
         condition: {
-            text: string;
-            icon: string;
+            text: string; // Weather description
+            icon: string; // Icon URL
         };
-        last_updated: string;
     };
 }
+
+// Unified weather data interface
+export interface WeatherData {
+    city: string; // City name
+    tempC: number; // Temperature in Celsius
+    description: string; // Weather description
+    humidity: number; // Humidity percentage
+    windKph: number; // Wind speed in km/h
+    iconUrl: string; // Icon URL
+    lastUpdated: string; // Last update timestamp
+}
+
+// Card state type for UI components
+export type CardState = 'idle' | 'loading' | 'success' | 'error';

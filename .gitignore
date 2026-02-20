@@ -33,3 +33,6 @@ yarn-error.log*
 
 # Misc
 .cache/
+
+# Config files with sensitive data
+src/config.ts
