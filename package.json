@@ -1,0 +1,13 @@
+{
+  "name": "weather-aggregator",
+  "version": "1.0.0",
+  "description": "Multi-API Weather Aggregator in TypeScript",
+  "main": "dist/app.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
