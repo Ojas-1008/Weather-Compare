@@ -1,5 +1,5 @@
-import { OWMApiResponse, WAApiResponse } from './types';
-import { CONFIG } from './config';
+import { OWMApiResponse, WAApiResponse } from './types.js';
+import { CONFIG } from './config.js';
 
 // Fetch weather data from OpenWeatherMap API
 export async function fetchFromOWM(city: string): Promise<OWMApiResponse> {

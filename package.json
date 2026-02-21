@@ -2,10 +2,12 @@
   "name": "weather-aggregator",
   "version": "1.0.0",
   "description": "Multi-API Weather Aggregator in TypeScript",
+  "type": "module",
   "main": "dist/app.js",
   "scripts": {
     "build": "tsc",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "test": "tsc && node dist/test.js"
   },
   "devDependencies": {
     "typescript": "^5.9.3"
