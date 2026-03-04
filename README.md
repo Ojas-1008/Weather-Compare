@@ -1,147 +1,340 @@
-# ⛅ WeatherCompare
+# ⛅ WeatherCompare - Multi-API Weather Aggregator
 
-A client-side web application built with **TypeScript** that lets you compare real-time weather data from two independent APIs side-by-side: [OpenWeatherMap](https://openweathermap.org/api) and [WeatherAPI](https://www.weatherapi.com/).
+A TypeScript-based web application that compares real-time weather data from two independent APIs side-by-side. Built with focus on **type safety**, **asynchronous operations**, and **data normalization**.
+
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9+-blue)
+![Node.js](https://img.shields.io/badge/Node.js-LTS-green)
+![License](https://img.shields.io/badge/License-MIT-yellow)
+
+---
+
+## 📋 Table of Contents
+
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Project Structure](#project-structure)
+- [Usage](#usage)
+- [Building](#building)
+- [Key Concepts](#key-concepts)
+- [API Documentation](#api-documentation)
+- [License](#license)
 
 ---
 
 ## ✨ Features
 
-- **Dual API fetch** — Retrieves live weather data from two sources simultaneously for any city.
-- **Side-by-side comparison** — Displays both results in matching cards so differences are immediately visible.
-- **Concurrent requests** — Uses `Promise.all` so both API calls fire at the same time.
-- **Unified data model** — Normalizes the differing JSON schemas from each API into a single `WeatherData` interface before rendering.
-- **Loading states** — Animated spinner shown inside each card while data is being fetched.
-- **Error handling** — If a city is not found, or an API call fails, the affected card shows a clear error message while the other card remains functional.
-- **Keyboard support** — Press **Enter** in the search box to trigger a search.
-- **Search history** — Previous searches are stored in `localStorage` and can be cleared via the footer button.
+- **Dual API Integration**: Fetches weather data from OpenWeatherMap and WeatherAPI simultaneously
+- **Real-time Data Comparison**: Display side-by-side weather information for any city
+- **Type-Safe**: Built with TypeScript interfaces and strict typing
+- **Concurrent Requests**: Uses `Promise.all` for optimal performance
+- **Data Normalization**: Converts different API response formats into a unified interface
+- **Robust Error Handling**: Gracefully handles API failures, network errors, and invalid inputs
+- **Loading States**: Visual feedback during API requests with loading indicators
+- **Responsive Design**: Mobile-friendly UI with CSS Grid/Flexbox
+- **Environment-based Configuration**: API keys managed through `.env` files for security
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Language | TypeScript 5 (strict mode) |
-| Markup | HTML5 |
-| Styling | CSS3 (Flexbox / CSS Variables) |
-| Fonts & Animation | Google Fonts · Animate.css |
-| APIs | OpenWeatherMap · WeatherAPI |
-| Build tool | `tsc` (TypeScript Compiler) |
-| Runtime | Browser (ES Modules) |
+- **Language**: TypeScript 5.9+
+- **Runtime**: Node.js (development) / Browser (production)
+- **Build Tool**: TypeScript Compiler (tsc)
+- **Environment Management**: dotenv
+- **APIs**:
+  - [OpenWeatherMap API](https://openweathermap.org/api)
+  - [WeatherAPI](https://www.weatherapi.com/)
+- **Styling**: CSS3 (Flexbox/Grid, CSS Variables)
+- **Markup**: HTML5
+
+---
+
+## 📦 Prerequisites
+
+- **Node.js** (v16 or higher) - [Download](https://nodejs.org/)
+- **npm** (v8 or higher) - comes with Node.js
+- **Git** - for cloning the repository
+- API keys from:
+  - [OpenWeatherMap](https://openweathermap.org/api) (free tier available)
+  - [WeatherAPI](https://www.weatherapi.com/) (free tier available)
+
+---
+
+## 🚀 Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/weather-aggregator.git
+   cd weather-aggregator
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Get your API keys**
+   - OpenWeatherMap: Visit https://openweathermap.org/api, sign up, and get your API key
+   - WeatherAPI: Visit https://www.weatherapi.com/, sign up, and get your API key
+
+---
+
+## ⚙️ Configuration
+
+1. **Create a `.env` file** in the project root:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Add your API keys** to `.env`:
+   ```
+   OWM_API_KEY=your_openweathermap_api_key_here
+   WEATHERAPI_KEY=your_weatherapi_key_here
+   ```
+
+3. **Verify `.env` is in `.gitignore`** (it should be) - Never commit your API keys!
 
 ---
 
 ## 📁 Project Structure
 
 ```
-weather-compare/
-├── index.html          # App entry point (loads /dist/app.js)
+weather-aggregator/
+├── index.html              # HTML entry point
+├── package.json            # Project metadata and dependencies
+├── tsconfig.json           # TypeScript compiler configuration
+├── .env.example            # Template for environment variables
+├── .gitignore              # Git ignore rules
+├── README.md              # This file
+├── TTD.md                 # Technical design document
+│
+├── src/                   # TypeScript source files
+│   ├── types.ts           # Interfaces and type definitions
+│   ├── config.ts          # API configuration (loaded from .env)
+│   ├── api.ts             # API fetch functions
+│   ├── utils.ts           # Data normalization utilities
+│   ├── dom.ts             # DOM manipulation helpers
+│   └── app.ts             # Main application orchestrator
+│
+├── dist/                  # Compiled JavaScript (generated by tsc)
+│   ├── app.js             # Compiled main app
+│   ├── api.js             # Compiled API module
+│   ├── types.js           # Compiled types
+│   ├── utils.js           # Compiled utilities
+│   ├── dom.js             # Compiled DOM functions
+│   └── config.js          # Compiled config
+│
 ├── css/
-│   └── styles.css      # All styling
-├── src/                # TypeScript source files
-│   ├── types.ts        # Shared interfaces & types
-│   ├── config.ts       # API base URLs and keys (git-ignored)
-│   ├── api.ts          # Fetch logic for each API
-│   ├── utils.ts        # Response normalizers (OWM → WeatherData, WA → WeatherData)
-│   ├── dom.ts          # DOM helpers (showLoading, renderWeatherCard, renderError)
-│   └── app.ts          # Main orchestrator (event listeners, search flow)
-├── dist/               # Compiled JavaScript output (auto-generated, git-ignored)
-├── tsconfig.json       # TypeScript compiler configuration
-└── package.json        # npm scripts
+│   └── styles.css         # Styling for the application
+│
+└── assets/
+    └── icons/             # Weather icons (if applicable)
 ```
 
 ---
 
-## 🚀 Getting Started
+## 💻 Usage
 
-### Prerequisites
+### Quick Start
 
-- **Node.js** (v18 or later recommended)
-- API keys for:
-  - [OpenWeatherMap](https://home.openweathermap.org/users/sign_up) — free tier is sufficient
-  - [WeatherAPI](https://www.weatherapi.com/signup.aspx) — free tier is sufficient
+1. **Build the TypeScript files**
+   ```bash
+   npm run build
+   ```
 
-### 1. Install dependencies
+2. **Open in browser**
+   - Open `index.html` in your web browser, or
+   - Use a local server:
+     ```bash
+     npx http-server
+     ```
+   - Navigate to `http://localhost:8080`
+
+3. **Search for a city**
+   - Enter a city name in the search bar
+   - Click the "Search" button
+   - View weather data from both APIs side-by-side
+
+### Available Scripts
 
 ```bash
-npm install
+# Build TypeScript to JavaScript
+npm run build
+
+# Watch mode - automatically rebuild on file changes
+npm run watch
+
+# Run tests
+npm test
 ```
 
-### 2. Configure API keys
+---
 
-Create the file `src/config.ts` (it is git-ignored to keep your keys private):
+## 🔨 Building
 
-```typescript
-export const CONFIG = {
-    OWM: {
-        BASE_URL: "https://api.openweathermap.org/data/2.5/weather",
-        API_KEY: "YOUR_OPENWEATHERMAP_KEY",
-    },
-    WEATHERAPI: {
-        BASE_URL: "https://api.weatherapi.com/v1/current.json",
-        API_KEY: "YOUR_WEATHERAPI_KEY",
-    },
-};
-```
-
-### 3. Build the TypeScript
-
+### Development Build
 ```bash
 npm run build
 ```
+Compiles TypeScript to JavaScript in the `dist/` folder.
 
-This compiles all files in `src/` to `dist/`.
-
-For automatic recompilation on save:
-
+### Watch Mode
 ```bash
 npm run watch
 ```
+Automatically recompiles TypeScript when source files change - ideal for development.
 
-### 4. Open in the browser
-
-Open `index.html` directly in your browser, or serve it with any static server, for example:
-
-```bash
-npx serve .
-```
+### Configuration
+See `tsconfig.json` for TypeScript compiler options:
+- **target**: ES2020
+- **module**: ES2020
+- **strict**: true (strict type checking enabled)
+- **moduleResolution**: node
 
 ---
 
-## 🔄 How It Works
+## 📚 Key Concepts
 
-1. The user types a city name and clicks **Search** (or presses Enter).
-2. `app.ts` calls `fetchFromOWM` and `fetchFromWeatherAPI` in parallel via `Promise.all`.
-3. Both raw API responses are passed through their respective normalizers in `utils.ts`, which map the differing JSON structures to the common `WeatherData` interface.
-4. `dom.ts` renders the normalized data into the two weather cards.
-5. If either call fails (network error, invalid city, etc.), the error message is shown in the corresponding card.
-
-### `WeatherData` interface
-
+### 1. **TypeScript Interfaces**
+Defines the expected structure of API responses:
 ```typescript
 interface WeatherData {
     city: string;
-    tempC: number;        // °C
+    tempC: number;
     description: string;
-    humidity: number;     // %
-    windKph: number;      // km/h
+    humidity: number;
+    windKph: number;
     iconUrl: string;
     lastUpdated: string;
 }
 ```
 
+### 2. **API Response Normalization**
+Different APIs return different field names and structures. The application normalizes both to a common interface:
+- OpenWeatherMap: `main.temp` → WeatherData: `tempC`
+- WeatherAPI: `current.temp_c` → WeatherData: `tempC`
+
+### 3. **Concurrent Async Operations**
+Uses `Promise.all()` for efficient parallel requests:
+```typescript
+const [owmRaw, waRaw] = await Promise.all([
+    fetchFromOWM(city),
+    fetchFromWeatherAPI(city)
+]);
+```
+
+### 4. **Error Handling**
+- Validates user input before API calls
+- Catches and displays API errors gracefully
+- Uses `finally` blocks to clean up loading states
+- Handles partial failures (one API fails, other succeeds)
+
+### 5. **Type Safety**
+- Type assertions for DOM elements
+- Type casting for API responses
+- Strict null checks enabled
+- Union types for flexible data handling
+
 ---
 
-## 📜 Available Scripts
+## 📡 API Documentation
 
-| Command | Description |
-|---|---|
-| `npm run build` | Compile TypeScript once |
-| `npm run watch` | Compile TypeScript in watch mode |
-| `npm test` | Compile and run `dist/test.js` |
+### OpenWeatherMap API
+- **Endpoint**: `https://api.openweathermap.org/data/2.5/weather`
+- **Parameters**: `q` (city), `appid` (API key), `units=metric`
+- **Response**: JSON with weather data
+- **Docs**: https://openweathermap.org/current
+
+### WeatherAPI
+- **Endpoint**: `https://api.weatherapi.com/v1/current.json`
+- **Parameters**: `q` (city), `key` (API key)
+- **Response**: JSON with weather data
+- **Docs**: https://www.weatherapi.com/docs/
+
+### Normalized Data Structure
+Both APIs are normalized to:
+```typescript
+interface WeatherData {
+    city: string;           // City name
+    tempC: number;          // Temperature in Celsius
+    description: string;    // Weather description
+    humidity: number;       // Humidity percentage
+    windKph: number;        // Wind speed in km/h
+    iconUrl: string;        // Weather icon URL
+    lastUpdated: string;    // Last update timestamp
+}
+```
 
 ---
 
-## 🙏 Attribution
+## 🔐 Security
 
-Weather data provided by [OpenWeatherMap](https://openweathermap.org/) and [WeatherAPI](https://www.weatherapi.com/).
+- **API keys** are stored in `.env` files (git ignored)
+- The `.gitignore` file excludes:
+  - `.env` (all environment variable files)
+  - `src/config.ts` and `src/config.js` (config files)
+  - `dist/` (compiled output)
+  - `node_modules/` (dependencies)
+
+**Never commit API keys or sensitive information to version control!**
+
+---
+
+## 📝 Learning Resources
+
+This project teaches:
+- **TypeScript basics**: Interfaces, types, type assertions
+- **Async/await**: Managing multiple concurrent API requests
+- **Fetch API**: Making HTTP requests from the browser
+- **Error handling**: Try/catch/finally patterns
+- **DOM manipulation**: Updating the UI based on data
+- **Responsive design**: CSS Grid and Flexbox layouts
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- [OpenWeatherMap](https://openweathermap.org/) for weather data API
+- [WeatherAPI](https://www.weatherapi.com/) for weather data API
+- [TypeScript](https://www.typescriptlang.org/) for type safety
+- [dotenv](https://github.com/motdotla/dotenv) for environment variable management
+
+---
+
+## ❓ FAQ
+
+**Q: Do I need both API keys?**
+A: Yes, this application is designed to compare data from both APIs.
+
+**Q: What if an API request fails?**
+A: The application shows an error message for that API while the other API's data displays normally.
+
+**Q: How do I update the API keys?**
+A: Update the `.env` file with your new keys and rebuild the project.
+
+**Q: Can I use this in production?**
+A: Yes! Build the project with `npm run build` and deploy the `dist/` folder along with `index.html` and `css/styles.css`.
+
+---
+
+**For detailed technical specifications, see [TTD.md](./TTD.md)**
