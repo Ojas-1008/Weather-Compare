@@ -50,9 +50,6 @@ jobs:
           cp -r dist _site/
           cp -r assets _site/ 2>/dev/null || true
 
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
-
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
