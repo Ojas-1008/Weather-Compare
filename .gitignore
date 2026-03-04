@@ -33,3 +33,6 @@ yarn-error.log*
 
 # Misc
 .cache/
+
+# GitHub Actions build artifacts
+_site/

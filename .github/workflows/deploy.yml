@@ -1,0 +1,63 @@
+name: Deploy WeatherCompare to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Inject API keys from secrets
+        run: |
+          sed -i "s|__OWM_API_KEY__|${{ secrets.OWM_API_KEY }}|g" src/config.ts
+          sed -i "s|__WEATHERAPI_KEY__|${{ secrets.WEATHERAPI_KEY }}|g" src/config.ts
+
+      - name: Build TypeScript
+        run: npm run build
+
+      - name: Prepare deployment artifact
+        run: |
+          mkdir -p _site
+          cp index.html _site/
+          cp -r css _site/
+          cp -r dist _site/
+          cp -r assets _site/ 2>/dev/null || true
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
